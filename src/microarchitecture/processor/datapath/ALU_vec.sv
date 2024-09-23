@@ -8,7 +8,7 @@ module ALU_vec #(parameter WIDTH_V = 128, parameter BITS_INDEX = 8)(
 );
 
     logic [WIDTH_V-1:0] result_alu;
-    logic [WIDTH_V-1:0] mult_result;
+    logic [WIDTH_V-1:0] result_dot;
 
     localparam NUM_INSTANCES = WIDTH_V / BITS_INDEX;    // Total number of instances
     localparam FLAGS_INDEX = 4;                         // Number of flags per element
@@ -31,7 +31,13 @@ module ALU_vec #(parameter WIDTH_V = 128, parameter BITS_INDEX = 8)(
     endgenerate
 
     // Aqui agregar modulo de producto punto (si es necesario)
+    dot_product #(.WIDTH_V(WIDTH_V), .BITS_INDEX(BITS_INDEX)) dot_product_uff
+    (
+        .a(a),
+        .b(b),
+        .result(result_dot)
+    );
 
-    assign result = (opcode == 3'b011) ? a : result_alu;
+    assign result = (opcode == 3'b011) ? result_dot : result_alu;
 
 endmodule
