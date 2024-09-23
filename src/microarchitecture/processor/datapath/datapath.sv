@@ -46,9 +46,9 @@ module datapath #(parameter WIDTH_V = 128)
 	logic [31:0] aluoutE, aluoutM, aluoutW;
 	logic [31:0] readdataW, resultW;
 	logic [3:0] flags;
-	logic [255:0] VsrcaD, VsrcaE, Vsrca2E;
-	logic [255:0] VsrcbD, VsrcbE, Vsrcb2E;
-	logic [255:0] VresultE, VresultW, ValuoutE, extVector, ValuoutW, VreadDataM, VreadDataW;
+	logic [WIDTH_V-1:0] VsrcaD, VsrcaE, Vsrca2E;
+	logic [WIDTH_V-1:0] VsrcbD, VsrcbE, Vsrcb2E;
+	logic [WIDTH_V-1:0] VresultE, VresultW, ValuoutE, extVector, ValuoutW, VreadDataM, VreadDataW;
 	logic [1:0] VforwardaE, VforwardbE;
 	logic [63:0] Vflags;
 	
@@ -138,8 +138,8 @@ module datapath #(parameter WIDTH_V = 128)
 	mux2 #(5) wrmux (rtE, rdE, regdstE, writeregE);
 	
 	
-	mux3 #(256) Vforwardaemux (VsrcaE, VresultW, ValuoutM, VforwardaE, Vsrca2E);
-	mux3 #(256) Vforwardbemux (VsrcbE, VresultW, ValuoutM, VforwardbE, Vsrcb2E);
+	mux3 #(WIDTH_V-1) Vforwardaemux (VsrcaE, VresultW, ValuoutM, VforwardaE, Vsrca2E);
+	mux3 #(WIDTH_V-1) Vforwardbemux (VsrcbE, VresultW, ValuoutM, VforwardbE, Vsrcb2E);
 
 	ALU_vec alu_vec(Vsrca2E, Vsrcb2E, srcb3E[15:0], alucontrolE, scalarE, VresultE, Vflags);
 

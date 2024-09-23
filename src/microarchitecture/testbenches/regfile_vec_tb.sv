@@ -5,8 +5,8 @@ module regfile_vec_tb;
     reg rst;
     reg vwe3;
     reg [4:0] vra1, vra2, vwa3;
-    reg [255:0] vwd3;
-    wire [255:0] vrd1, vrd2;
+    reg [127:0] vwd3;
+    wire [127:0] vrd1, vrd2;
 
     // Instancia del modulo regfile_vec
     regfile_vec uut (
