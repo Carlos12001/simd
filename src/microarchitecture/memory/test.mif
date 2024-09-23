@@ -1,0 +1,14 @@
+DEPTH = 12288;         -- Total number of addresses
+WIDTH = 256;           -- Data width in bits
+
+ADDRESS_RADIX = DEC;   -- Address numeral system (DEC -> Decimal)
+DATA_RADIX = HEX;      -- Data numeral system (HEX -> Hexadecimal)
+
+-- This memory has a total of 12288 addresses,
+-- with 256 bits (32 bytes) per address.
+-- Total memory capacity: 
+-- 12288 addresses * 32 bytes = 393216 bytes (384 KiB).
+
+CONTENT BEGIN
+    [0..12287] : 0;   -- All addresses initialized to 0
+END;
