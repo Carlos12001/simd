@@ -4,7 +4,6 @@ module ALU_vec_aux_tb;
 
     reg signed [WIDTH-1:0] a, b, c;
     reg [2:0] opcode;
-    reg flag_scalar;
     int instance_num;
     wire signed [WIDTH-1:0] result;
     wire [3:0] flags;
@@ -15,14 +14,12 @@ module ALU_vec_aux_tb;
         .data_b(b),
         .data_c(c),
         .opcode(opcode),
-        .flag_scalar(flag_scalar),
         .instance_num(instance_num),
         .result(result),
         .flags(flags)
     );
 
     initial begin
-        flag_scalar = 1'b0;
         c = {WIDTH{1'b0}};
         instance_num = 0;
 
