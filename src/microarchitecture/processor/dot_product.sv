@@ -20,8 +20,8 @@ module dot_product #(
     genvar idx;
     generate
         for (idx = 0; idx < NUM_ELEMENTS; idx = idx + 1) begin : UNPACK
-            assign a_matrix[idx] = a[BITS_INDEX*(NUM_ELEMENTS - idx) - 1 -: BITS_INDEX];
-            assign b_matrix[idx] = b[BITS_INDEX*(NUM_ELEMENTS - idx) - 1 -: BITS_INDEX];
+            assign a_matrix[idx] = b[BITS_INDEX*(NUM_ELEMENTS - idx) - 1 -: BITS_INDEX];
+            assign b_matrix[idx] = a[BITS_INDEX*(NUM_ELEMENTS - idx) - 1 -: BITS_INDEX];
         end
     endgenerate
 

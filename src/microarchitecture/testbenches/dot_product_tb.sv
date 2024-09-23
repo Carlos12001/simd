@@ -61,33 +61,50 @@ module dot_product_tb;
             $display("Result: %h", result);
         end
 
-                // Build 'a' vector (flattened row-wise from top to bottom)
+        // Build 'a' vector
+        /*
+        a=
+          [[2 4 2 5]
+          [1 5 2 6]
+          [8 5 3 2]
+          [0 1 3 6]]
+        */
         a = {
-            8'd2, 8'd4, 8'd2, 8'd5,    // Row 1: a[0]..a[3]
-            8'd1, 8'd5, 8'd2, 8'd6,   // Row 2: a[4]..a[7]
-            8'd8, 8'd5, 8'd3, 8'd2,   // Row 3: a[8]..a[11]
-            8'd0, 8'd1, 8'd3, 8'd6   // Row 4: a[12]..a[15]
+            8'd2, 8'd1, 8'd8, 8'd0,    // Col 1
+            8'd4, 8'd5, 8'd5, 8'd1,   // Col 2
+            8'd2, 8'd2, 8'd3, 8'd3,   // Col 3
+            8'd5, 8'd6, 8'd2, 8'd6   // Col 4
         };
 
-        // Build 'b' vector (flattened row-wise from top to bottom)
+        // Build 'b' vector
+        /*
+        b=
+          [[1 0 1 0]
+          [0 1 0 1]
+          [4 1 4 1]
+          [2 2 2 2]]
+        */
         b = {
-            8'd1, 8'd0, 8'd1, 8'd0,    // Row 1: b[0]..b[3]
-            8'd0, 8'd1, 8'd0, 8'd1,   // Row 2: b[4]..b[7]
-            8'd4, 8'd1, 8'd4, 8'd1,   // Row 3: b[8]..b[11]
-            8'd2, 8'd2, 8'd2, 8'd2   // Row 4: b[12]..b[15]
+            8'd1, 8'd0, 8'd4, 8'd2,    // Col 1
+            8'd0, 8'd1, 8'd1, 8'd2,   // Col 2
+            8'd1, 8'd0, 8'd4, 8'd2,   // Col 3
+            8'd0, 8'd1, 8'd1, 8'd2   // Col 4
         };
 
         // Build the expected result vector (flattened row-wise from top to bottom)
-        // Expected result matrix:
-        // [[20, 16, 20, 16],
-        //  [21, 19, 21, 19],
-        //  [24, 12, 24, 12],
-        //  [24, 16, 24, 16]]
+        /*
+        result=
+          [[20 16 20 16]
+          [21 19 21 19]
+          [24 12 24 12]
+          [24 16 24 16]]
+        */
+
         expected_result = {
-            8'd20, 8'd16, 8'd20, 8'd16,    // Row 1: result[0]..result[3]
-            8'd21, 8'd19, 8'd21, 8'd19,   // Row 2: result[4]..result[7]
-            8'd24, 8'd12, 8'd24, 8'd12,   // Row 3: result[8]..result[11]
-            8'd24, 8'd16, 8'd24, 8'd16   // Row 4: result[12]..result[15]
+            8'd20, 8'd21, 8'd24, 8'd24,    // Col 1 
+            8'd16, 8'd19, 8'd12, 8'd16,   // Col 2
+            8'd20, 8'd21, 8'd24, 8'd24,   // Col 3
+            8'd16, 8'd19, 8'd12, 8'd16   // Col 4
         };
 
         // Wait for the computation to complete
@@ -121,10 +138,11 @@ module dot_product_tb;
         integer i, j;
         reg [BITS_INDEX-1:0] element;
         begin
-            for (i = MATRIX_SIZE-1; i >=0; i = i -1) begin
+            $display("%s:", name);
+            for (i = 0; i < MATRIX_SIZE; i = i + 1) begin
                 $write("[ ");
-                for (j = 0; j < MATRIX_SIZE; j = j +1) begin
-                    element = vec[BITS_INDEX * (i * MATRIX_SIZE + j + 1) - 1 -: BITS_INDEX];
+                for (j = 0; j < MATRIX_SIZE; j = j + 1) begin
+                    element = vec[BITS_INDEX * (NUM_ELEMENTS - ((i * MATRIX_SIZE) + j)) - 1 -: BITS_INDEX];
                     $write("%0d ", element);
                 end
                 $write("]\n");

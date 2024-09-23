@@ -57,7 +57,7 @@ set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
-set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH regfile_vec_tb -section_id eda_simulation
+set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH dot_product_tb -section_id eda_simulation
 set_global_assignment -name EDA_TEST_BENCH_NAME mips_16_tb -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id mips_16_tb
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME mips_16_tb -section_id mips_16_tb
@@ -150,9 +150,6 @@ set_location_assignment PIN_AB27 -to display6[3]
 set_location_assignment PIN_AB26 -to display6[4]
 set_location_assignment PIN_AA26 -to display6[5]
 set_location_assignment PIN_AA25 -to display6[6]
-set_global_assignment -name EDA_TEST_BENCH_NAME sum_tb -section_id eda_simulation
-set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id sum_tb
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME sum_tb -section_id sum_tb
 set_global_assignment -name EDA_TEST_BENCH_NAME dmem_tb -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id dmem_tb
 set_global_assignment -name EDA_TEST_BENCH_RUN_SIM_FOR "200 ps" -section_id dmem_tb
@@ -170,6 +167,15 @@ set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME vector_load_store_unit_tb
 set_global_assignment -name EDA_TEST_BENCH_RUN_SIM_FOR "1 ns" -section_id general_tb
 set_location_assignment PIN_AF14 -to clk_c
 set_location_assignment PIN_W16 -to clk_aux
+set_global_assignment -name EDA_TEST_BENCH_RUN_SIM_FOR "2 ns" -section_id PMC_tb
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name TIMING_ANALYZER_MULTICORNER_ANALYSIS ON
+set_global_assignment -name SMART_RECOMPILE ON
+set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
+set_global_assignment -name SYSTEMVERILOG_FILE processor/dot_product.sv
+set_global_assignment -name SYSTEMVERILOG_FILE testbenches/dot_product_tb.sv
 set_global_assignment -name SYSTEMVERILOG_FILE memory/imem.sv
 set_global_assignment -name LICENSE_FILE memory/meminstr.dat
 set_global_assignment -name QIP_FILE memory/dmem.qip
@@ -184,7 +190,6 @@ set_global_assignment -name SYSTEMVERILOG_FILE processor/datapath/ALU_vec_aux.sv
 set_global_assignment -name SYSTEMVERILOG_FILE processor/datapath/datapath.sv
 set_global_assignment -name SYSTEMVERILOG_FILE processor/datapath/regfile.sv
 set_global_assignment -name SYSTEMVERILOG_FILE processor/datapath/regfile_vec.sv
-set_global_assignment -name SYSTEMVERILOG_FILE processor/datapath/sum.sv
 set_global_assignment -name SYSTEMVERILOG_FILE processor/datapath/vector_load_store_unit.sv
 set_global_assignment -name SYSTEMVERILOG_FILE processor/hazard/hazard.sv
 set_global_assignment -name SYSTEMVERILOG_FILE processor/metrics/PMC_unit.sv
@@ -206,7 +211,6 @@ set_global_assignment -name SYSTEMVERILOG_FILE testbenches/ALU_vec_aux_tb.sv
 set_global_assignment -name SYSTEMVERILOG_FILE testbenches/regfile_vec_tb.sv
 set_global_assignment -name SYSTEMVERILOG_FILE testbenches/control_tb.sv
 set_global_assignment -name SYSTEMVERILOG_FILE testbenches/simd_tb.sv
-set_global_assignment -name SYSTEMVERILOG_FILE testbenches/sum_tb.sv
 set_global_assignment -name SYSTEMVERILOG_FILE testbenches/PMC_tb.sv
 set_global_assignment -name SYSTEMVERILOG_FILE processor/instr_counter.sv
 set_global_assignment -name SYSTEMVERILOG_FILE processor/divider.sv
@@ -216,13 +220,11 @@ set_global_assignment -name SYSTEMVERILOG_FILE testbenches/vector_load_store_uni
 set_global_assignment -name SYSTEMVERILOG_FILE processor/muxclock.sv
 set_global_assignment -name SYSTEMVERILOG_FILE processor/muxout.sv
 set_global_assignment -name SYSTEMVERILOG_FILE processor/displayconverter.sv
-set_global_assignment -name EDA_TEST_BENCH_RUN_SIM_FOR "2 ns" -section_id PMC_tb
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_global_assignment -name TIMING_ANALYZER_MULTICORNER_ANALYSIS ON
-set_global_assignment -name SMART_RECOMPILE ON
-set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
+set_global_assignment -name SOURCE_FILE db/microarchitecture.cmp.rdb
+set_global_assignment -name EDA_TEST_BENCH_NAME dot_product_tb -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id dot_product_tb
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME dot_product_tb -section_id dot_product_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/dot_product_tb.sv -section_id dot_product_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE mips_16_tb.sv -section_id mips_16_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/register_tb.sv -section_id register_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/D_FF_tb.sv -section_id D_FF_tb
@@ -237,7 +239,6 @@ set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/regfile_vec_tb.sv -s
 set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/ALU_vec_aux_tb.sv -section_id ALU_vec_aux_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/control_tb.sv -section_id control_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/simd_tb.sv -section_id simd_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/sum_tb.sv -section_id sum_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/dmem_tb.sv -section_id dmem_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/PMC_tb.sv -section_id PMC_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE testbenches/divider_tb.sv -section_id divider_tb
