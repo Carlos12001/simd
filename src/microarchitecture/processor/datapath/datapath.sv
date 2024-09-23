@@ -1,6 +1,6 @@
 // Processor's Datapath
 
-module datapath
+module datapath #(parameter WIDTH_V = 128)
 (
 	input logic clk, reset,
 	input logic memtoregE, memdataM, memSrcM, memtoRegM, memtoRegW, memwriteE, memWriteM,
