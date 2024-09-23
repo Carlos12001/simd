@@ -141,7 +141,10 @@ module datapath #(parameter WIDTH_V = 128, parameter BITS_INDEX = 8)
 	mux3 #(WIDTH_V) Vforwardaemux (VsrcaE, VresultW, ValuoutM, VforwardaE, Vsrca2E);
 	mux3 #(WIDTH_V) Vforwardbemux (VsrcbE, VresultW, ValuoutM, VforwardbE, Vsrcb2E);
 
-	ALU_vec alu_vec(Vsrca2E, Vsrcb2E, srcb3E[BITS_INDEX-1:0], alucontrolE, VresultE, Vflags);
+	ALU_vec #(
+        .WIDTH_V(WIDTH_V),
+        .BITS_INDEX(BITS_INDEX)
+  ) alu_vec(Vsrca2E, Vsrcb2E, srcb3E[BITS_INDEX-1:0], alucontrolE, VresultE, Vflags);
 
 	mux2 #(WIDTH_V) SWmux ( VresultE, Vsrcb2E, memwriteE, ValuoutE);
 	

@@ -1,123 +1,104 @@
 module ALU_vec_tb;
 
-    // Parámetros
+    // Parameters
     localparam WIDTH_V = 128;
-    localparam bits_index = 8;
-    localparam NUM_INSTANCES = WIDTH_V / bits_index;  // 128 / 8 = 16
+    localparam BITS_INDEX = 8;
+    localparam NUM_INSTANCES = WIDTH_V / BITS_INDEX;  // 128 / 8 = 16
 
-    // Señales
+    // Signals
     reg [WIDTH_V-1:0] a, b;
-    reg [bits_index-1:0] c;
+    reg [BITS_INDEX-1:0] c;
     reg [2:0] opcode;
     wire [WIDTH_V-1:0] result;
     wire [(NUM_INSTANCES*4)-1:0] flags;
 
-    // Instanciar el módulo ALU_vec
+    // Instantiate the ALU_vec module
     ALU_vec #(
         .WIDTH_V(WIDTH_V),
-        .bits_index(bits_index)
+        .BITS_INDEX(BITS_INDEX)
     ) dut (
         .a(a),
         .b(b),
         .c(c),
         .opcode(opcode),
-        .flag_scalar(flag_scalar),
         .result(result),
         .flags(flags)
     );
 
     initial begin
-        // Inicializar señales
-        flag_scalar = 1'b0;
-        c = 8'd0;  // No se usa en estas operaciones
+        // Initialize signals
+        c = 8'd0;  // Not used in these operations
 
-        // Test 1: Suma
-        opcode = 3'b010;  // Código de operación para suma
+        // Test 1: Addition
+        opcode = 3'b010;  // Operation code for addition
 
-        // Asignar el mismo valor a todos los elementos de 'a' y 'b'
-        a = {NUM_INSTANCES{8'd10}};  // Todos los elementos son 10
-        b = {NUM_INSTANCES{8'd20}};  // Todos los elementos son 20
+        // Assign the same value to all elements of 'a' and 'b'
+        a = {NUM_INSTANCES{8'd10}};  // All elements are 10
+        b = {NUM_INSTANCES{8'd20}};  // All elements are 20
 
-        #10;  // Esperar a que los resultados se propaguen
+        #10;  // Wait for results to propagate
 
-        $display("Prueba de Suma:");
+        $display("Addition Test:");
         $display("a = %h", a);
         $display("b = %h", b);
         $display("result = %h", result);
 
-        // Verificar que el resultado es el esperado (30 en todos los elementos)
-        if (result === {NUM_INSTANCES{8'd30}}) begin
-            $display("Prueba de Suma Exitosa.");
-        end else begin
-            $display("Prueba de Suma Fallida.");
-        end
+        // Verify that the result is as expected (30 in all elements)
+        assert(result === {NUM_INSTANCES{8'd30}}) else $error("Addition Test Failed.");
 
-        // Test 2: Resta
-        opcode = 3'b001;  // Código de operación para resta
+        // Test 2: Subtraction
+        opcode = 3'b001;  // Operation code for subtraction
 
-        // Asignar el mismo valor a todos los elementos de 'a' y 'b'
-        a = {NUM_INSTANCES{8'd50}};  // Todos los elementos son 50
-        b = {NUM_INSTANCES{8'd20}};  // Todos los elementos son 20
+        // Assign the same value to all elements of 'a' and 'b'
+        a = {NUM_INSTANCES{8'd50}};  // All elements are 50
+        b = {NUM_INSTANCES{8'd20}};  // All elements are 20
 
-        #10;  // Esperar a que los resultados se propaguen
+        #10;  // Wait for results to propagate
 
-        $display("\nPrueba de Resta:");
+        $display("\nSubtraction Test:");
         $display("a = %h", a);
         $display("b = %h", b);
         $display("result = %h", result);
 
-        // Verificar que el resultado es el esperado (30 en todos los elementos)
-        if (result === {NUM_INSTANCES{8'd30}}) begin
-            $display("Prueba de Resta Exitosa.");
-        end else begin
-            $display("Prueba de Resta Fallida.");
-        end
+        // Verify that the result is as expected (30 in all elements)
+        assert(result === {NUM_INSTANCES{8'd30}}) else $error("Subtraction Test Failed.");
 
-        // Test 3: Multiplicación
-        opcode = 3'b000;  // Código de operación para multiplicación
+        // Test 3: Multiplication
+        opcode = 3'b000;  // Operation code for multiplication
 
-        // Asignar el mismo valor a todos los elementos de 'a' y 'b'
-        a = {NUM_INSTANCES{8'sd5}};   // Todos los elementos son 5
-        b = {NUM_INSTANCES{8'sd6}};   // Todos los elementos son 6
+        // Assign the same value to all elements of 'a' and 'b'
+        a = {NUM_INSTANCES{8'sd5}};   // All elements are 5
+        b = {NUM_INSTANCES{8'sd6}};   // All elements are 6
 
-        #10;  // Esperar a que los resultados se propaguen
+        #10;  // Wait for results to propagate
 
-        $display("\nPrueba de Multiplicación:");
+        $display("\nMultiplication Test:");
         $display("a = %h", a);
         $display("b = %h", b);
         $display("result = %h", result);
 
-        // Verificar que el resultado es el esperado (30 en todos los elementos)
-        if (result === {NUM_INSTANCES{8'sd30}}) begin
-            $display("Prueba de Multiplicación Exitosa.");
-        end else begin
-            $display("Prueba de Multiplicación Fallida.");
-        end
+        // Verify that the result is as expected (30 in all elements)
+        assert(result === {NUM_INSTANCES{8'sd30}}) else $error("Multiplication Test Failed.");
 
-        // Test 4: Operación 'set'
-        opcode = 3'b111;  // Código de operación para 'set'
-        c = 8'd42;        // Valor a establecer
+        // Test 4: 'set' Operation
+        opcode = 3'b111;  // Operation code for 'set'
+        c = 8'd42;        // Value to set
 
-        // 'a' y 'b' no son relevantes en esta operación
+        // 'a' and 'b' are not relevant in this operation
         a = {WIDTH_V{1'b0}};
         b = {WIDTH_V{1'b0}};
 
-        #10;  // Esperar a que los resultados se propaguen
+        #10;  // Wait for results to propagate
 
-        $display("\nPrueba de Operación 'set':");
+        $display("\n'set' Operation Test:");
         $display("c = %d", c);
         $display("result = %h", result);
 
-        // Verificar que el resultado es el esperado (c en todos los elementos)
-        if (result === {NUM_INSTANCES{c}}) begin
-            $display("Prueba de Operación 'set' Exitosa.");
-        end else begin
-            $display("Prueba de Operación 'set' Fallida.");
-        end
+        // Verify that the result is as expected (c in all elements)
+        assert(result === {NUM_INSTANCES{c}}) else $error("'set' Operation Test Failed.");
 
-        // Finalizar la simulación
-        $display("\nTodas las pruebas han sido completadas.");
-        $finish;
+        // End the simulation
+        $display("\nAll tests have been completed.");
     end
 
 endmodule
