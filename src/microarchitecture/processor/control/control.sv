@@ -11,7 +11,7 @@ module control
 	output logic jumpD,
 	output logic [1:0] branchD,
 	output logic pcsrcD, alusrcE, scalarE,
-	output logic [2:0] alucontrolE,
+	output logic [3:0] alucontrolE,
 	output logic regdstE,
 	output logic memwriteE, memwriteM, memdataM, memsrcM,
 	output logic regwriteE, regwriteM, VregwriteM, regwriteW, VregwriteW,
@@ -26,7 +26,7 @@ module control
 	logic [1:0] aluopD;
 	logic memtoregD, memwriteD, alusrcD, scalarD, 
 			regdstD, regwriteD, VregwriteD, memdataD;
-	logic [2:0] alucontrolD;
+	logic [3:0] alucontrolD;
 	logic memdataE, memsrcD, memsrcE;
 	logic VregwriteE, VmemtoregM;
 	logic [5:0] opE, functE;
@@ -50,7 +50,7 @@ module control
 	
 	
 	// pipeline registers
-	reg_rcen #(24) regE
+	reg_rcen #(25) regE
 	(
 		clk, reset, ~stallE, flushE,
 		{memtoregD, memwriteD, memdataD, memsrcD, alusrcD, scalarD, regdstD, regwriteD, VregwriteD, alucontrolD, opD, functD},

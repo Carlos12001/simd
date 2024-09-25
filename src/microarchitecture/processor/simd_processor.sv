@@ -21,7 +21,7 @@ module simd_processor
 			pcsrcD, memdataM,
 			memtoregE, memtoregM, memtoregW,
 			regwriteE, regwriteM, VregwriteM, regwriteW, VregwriteW;
-	logic [2:0] alucontrolE;
+	logic [3:0] alucontrolE;
 	logic flushE;
 	logic jumpD; 
 	logic [1:0] branchD;
