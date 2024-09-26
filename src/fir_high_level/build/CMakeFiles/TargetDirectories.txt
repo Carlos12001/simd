@@ -1,3 +1,0 @@
-/home/johnnyzaet/Desktop/CE4302-Computer_Architecture_II/C++/build/CMakeFiles/FIR_SIMD.dir
-/home/johnnyzaet/Desktop/CE4302-Computer_Architecture_II/C++/build/CMakeFiles/edit_cache.dir
-/home/johnnyzaet/Desktop/CE4302-Computer_Architecture_II/C++/build/CMakeFiles/rebuild_cache.dir
