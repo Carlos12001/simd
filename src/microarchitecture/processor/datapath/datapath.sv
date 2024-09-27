@@ -1,6 +1,6 @@
 // Processor's Datapath
 
-module datapath
+module datapath #(parameter WIDTH_V = 128, parameter BITS_INDEX = 8)
 (
 	input logic clk, reset,
 	input logic memtoregE, memdataM, memSrcM, memtoRegM, memtoRegW, memwriteE, memWriteM,
@@ -46,9 +46,9 @@ module datapath
 	logic [31:0] aluoutE, aluoutM, aluoutW;
 	logic [31:0] readdataW, resultW;
 	logic [3:0] flags;
-	logic [255:0] VsrcaD, VsrcaE, Vsrca2E;
-	logic [255:0] VsrcbD, VsrcbE, Vsrcb2E;
-	logic [255:0] VresultE, VresultW, ValuoutE, extVector, ValuoutW, VreadDataM, VreadDataW;
+	logic [WIDTH_V-1:0] VsrcaD, VsrcaE, Vsrca2E;
+	logic [WIDTH_V-1:0] VsrcbD, VsrcbE, Vsrcb2E;
+	logic [WIDTH_V-1:0] VresultE, VresultW, ValuoutE, extVector, ValuoutW, VreadDataM, VreadDataW;
 	logic [1:0] VforwardaE, VforwardbE;
 	logic [63:0] Vflags;
 	
@@ -126,8 +126,8 @@ module datapath
 	reg_rcen #(5) r4E (clk, reset, ~stallE, flushE, rsD, rsE);
 	reg_rcen #(5) r5E (clk, reset, ~stallE, flushE, rtD, rtE);
 	reg_rcen #(5) r6E (clk, reset, ~stallE, flushE, rdD, rdE);
-	reg_rcen #(256) r7E (clk, reset, ~stallE, flushE, VsrcaD, VsrcaE);
-	reg_rcen #(256) r8E (clk, reset, ~stallE, flushE, VsrcbD, VsrcbE);
+	reg_rcen #(WIDTH_V) r7E (clk, reset, ~stallE, flushE, VsrcaD, VsrcaE);
+	reg_rcen #(WIDTH_V) r8E (clk, reset, ~stallE, flushE, VsrcbD, VsrcbE);
 	
 	
 	mux3 #(32) forwardaemux (srcaE, resultW, aluoutM, forwardaE, srca2E);
@@ -138,12 +138,15 @@ module datapath
 	mux2 #(5) wrmux (rtE, rdE, regdstE, writeregE);
 	
 	
-	mux3 #(256) Vforwardaemux (VsrcaE, VresultW, ValuoutM, VforwardaE, Vsrca2E);
-	mux3 #(256) Vforwardbemux (VsrcbE, VresultW, ValuoutM, VforwardbE, Vsrcb2E);
+	mux3 #(WIDTH_V) Vforwardaemux (VsrcaE, VresultW, ValuoutM, VforwardaE, Vsrca2E);
+	mux3 #(WIDTH_V) Vforwardbemux (VsrcbE, VresultW, ValuoutM, VforwardbE, Vsrcb2E);
 
-	ALU_vec alu_vec(Vsrca2E, Vsrcb2E, srcb3E[15:0], alucontrolE, scalarE, VresultE, Vflags);
+	ALU_vec #(
+        .WIDTH_V(WIDTH_V),
+        .BITS_INDEX(BITS_INDEX)
+  ) alu_vec(Vsrca2E, Vsrcb2E, srcb3E[BITS_INDEX-1:0], alucontrolE, VresultE, Vflags);
 
-	mux2 #(256) SWmux ( VresultE, Vsrcb2E, memwriteE, ValuoutE);
+	mux2 #(WIDTH_V) SWmux ( VresultE, Vsrcb2E, memwriteE, ValuoutE);
 	
 	// Memory stage
 	reg_ren #(32) r1M(clk, reset, ~stallM, srcb2E, writedataM);

@@ -1,82 +1,104 @@
 module ALU_vec_tb;
 
-	// Input signals
-	reg [255:0] a;
-	reg [255:0] b;
-	reg [15:0] c;
-	reg [2:0] opcode;
-	reg flag_scalar;
+    // Parameters
+    localparam WIDTH_V = 128;
+    localparam BITS_INDEX = 8;
+    localparam NUM_INSTANCES = WIDTH_V / BITS_INDEX;  // 128 / 8 = 16
 
-	// Output signals
-	wire [255:0] result;
-	wire [63:0] flags;
+    // Signals
+    reg [WIDTH_V-1:0] a, b;
+    reg [BITS_INDEX-1:0] c;
+    reg [2:0] opcode;
+    wire [WIDTH_V-1:0] result;
+    wire [(NUM_INSTANCES*4)-1:0] flags;
 
-	// ALUC_vec module instance
-	ALU_vec uut (
-		.a(a),
-		.b(b),
-		.c(c),
-		.opcode(opcode),
-		.flag_scalar(flag_scalar),
-		.result(result),
-		.flags(flags)
-	);
+    // Instantiate the ALU_vec module
+    ALU_vec #(
+        .WIDTH_V(WIDTH_V),
+        .BITS_INDEX(BITS_INDEX)
+    ) dut (
+        .a(a),
+        .b(b),
+        .c(c),
+        .opcode(opcode),
+        .result(result),
+        .flags(flags)
+    );
 
-	initial begin
-		// a = [1.5,   1.25, 3.5, 1.5,  0.5,  3.0,  1.25]
-		// b = [-1.75, 1.5,  2.0, 3,25, 5.75, -0.5, -1.5]
-		a = 256'h0180_0140_0380_0180_0080_0300_0140_0000_0000_0000_0000_0000_0000_0000_0000_0140; // Valor de entrada a
-		b = 256'hFE40_0180_0200_0340_05c0_FF80_FE80_0000_0000_0000_0000_0000_0000_0000_0000_FE80; // Valor de entrada b
-		opcode = 3'b000; // multiplication code
-		flag_scalar = 1'b0;
+    initial begin
+        // Initialize signals
+        c = 8'd0;  // Not used in these operations
 
-		#100;
+        // Test 1: Addition
+        opcode = 3'b010;  // Operation code for addition
 
-		$display("a = %h\nb = %h\n", a, b);
+        // Assign the same value to all elements of 'a' and 'b'
+        a = {NUM_INSTANCES{8'd10}};  // All elements are 10
+        b = {NUM_INSTANCES{8'd20}};  // All elements are 20
 
-		// Show fp vector mult
-		$display("Result fp mult vector: %h", result);
-		$display("Flags: %b", flags);
+        #10;  // Wait for results to propagate
 
-		flag_scalar = 1'b1;
-		#100;
+        $display("Addition Test:");
+        $display("a = %h", a);
+        $display("b = %h", b);
+        $display("result = %h", result);
 
-		// Show fp scalar mult
-		$display("Result fp mult scalar: %h", result);
-		$display("Flags: %b", flags);
+        // Verify that the result is as expected (30 in all elements)
+        assert(result === {NUM_INSTANCES{8'd30}}) else $error("Addition Test Failed.");
 
-		flag_scalar = 1'b0;	//vector
-		opcode = 3'b010;	// add code
-		#100;
+        // Test 2: Subtraction
+        opcode = 3'b001;  // Operation code for subtraction
 
-		// Show fp vector add
-		$display("Result fp add vector: %h", result);
-		$display("Flags: %b", flags);
+        // Assign the same value to all elements of 'a' and 'b'
+        a = {NUM_INSTANCES{8'd50}};  // All elements are 50
+        b = {NUM_INSTANCES{8'd20}};  // All elements are 20
 
-		flag_scalar = 1'b1;
-		#100;
+        #10;  // Wait for results to propagate
 
-		// Show fp scalar add
-		$display("Result fp add scalar: %h", result);
-		$display("Flags: %b", flags);
+        $display("\nSubtraction Test:");
+        $display("a = %h", a);
+        $display("b = %h", b);
+        $display("result = %h", result);
 
-		flag_scalar = 1'b0;
-		opcode = 3'b111;
-		c = 16'hFF00; //value to be set in all vector
-		#100;
+        // Verify that the result is as expected (30 in all elements)
+        assert(result === {NUM_INSTANCES{8'd30}}) else $error("Subtraction Test Failed.");
 
-		// Show fp vector set
-		$display("Result fp vector set: %h", result);
-		$display("Flags: %b", flags);
+        // Test 3: Multiplication
+        opcode = 3'b000;  // Operation code for multiplication
 
-		opcode = 3'b011;
-		#100;
+        // Assign the same value to all elements of 'a' and 'b'
+        a = {NUM_INSTANCES{8'sd5}};   // All elements are 5
+        b = {NUM_INSTANCES{8'sd6}};   // All elements are 6
 
-		// Show fp vector sum
-		$display("Result fp vector sum: %h", result);
-		$display("Flags: %b", flags);
+        #10;  // Wait for results to propagate
 
-				
-	end
+        $display("\nMultiplication Test:");
+        $display("a = %h", a);
+        $display("b = %h", b);
+        $display("result = %h", result);
+
+        // Verify that the result is as expected (30 in all elements)
+        assert(result === {NUM_INSTANCES{8'sd30}}) else $error("Multiplication Test Failed.");
+
+        // Test 4: 'set' Operation
+        opcode = 3'b111;  // Operation code for 'set'
+        c = 8'd42;        // Value to set
+
+        // 'a' and 'b' are not relevant in this operation
+        a = {WIDTH_V{1'b0}};
+        b = {WIDTH_V{1'b0}};
+
+        #10;  // Wait for results to propagate
+
+        $display("\n'set' Operation Test:");
+        $display("c = %d", c);
+        $display("result = %h", result);
+
+        // Verify that the result is as expected (c in all elements)
+        assert(result === {NUM_INSTANCES{c}}) else $error("'set' Operation Test Failed.");
+
+        // End the simulation
+        $display("\nAll tests have been completed.");
+    end
 
 endmodule
