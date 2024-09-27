@@ -12,7 +12,7 @@ module control_tb();
 	logic regdstE,
 			regwriteE, regwriteM, regwriteW, VregwriteW,
 			jumpD;
-	logic [2:0] alucontrolE;
+	logic [3:0] alucontrolE;
 	logic memwriteM, memdataM, memsrcM;
 	logic memtoregE, memtoregM, memtoregW;
 	

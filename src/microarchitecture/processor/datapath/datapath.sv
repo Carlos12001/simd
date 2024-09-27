@@ -9,7 +9,7 @@ module datapath #(parameter WIDTH_V = 128, parameter BITS_INDEX = 8)
 	input logic alusrcE, regdstE, scalarE,
 	input logic regwriteE, regwriteM, VregwriteM, regwriteW, VregwriteW,
 	input logic jumpD,
-	input logic [2:0] alucontrolE,
+	input logic [3:0] alucontrolE,
 	output logic [31:0] pcF,
 	input logic [31:0] instrF,
 	
